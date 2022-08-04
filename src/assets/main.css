@@ -1,0 +1,14 @@
+@import "./base.css";
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+.icon {
+  fill: var(--color-text);
+  width: 24px;
+  height: 24px;
+}
