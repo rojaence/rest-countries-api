@@ -13,12 +13,14 @@ import { RouterLink } from 'vue-router'
 import { useIndexStore } from '@/stores/index'
 import IconTheme from '@/components/icons/IconTheme.vue'
 import IconEarth from '@/components/icons/IconEarth.vue'
+import ThemeProvider from '@/services/ThemeProvider'
 
 export default {
   name: 'AppHeader',
   setup() {
-    const indexStore = useIndexStore()
-    return { indexStore }
+    const indexStore = useIndexStore();
+    const themeProvider = new ThemeProvider();
+    return { indexStore, themeProvider }
   },
   components: {
     RouterLink,
@@ -27,23 +29,12 @@ export default {
   },
   methods: {
     setAppTheme() {
-      let value = localStorage.getItem("RestCountriesApiDarkMode"); 
-      if (value === "true") {
-        localStorage.setItem("RestCountriesApiDarkMode", false);
-        this.selectDarkMode(false);
+      if (this.themeProvider.setDarkMode() === false) {
         this.indexStore.setDarkMode(false);
       } else {
-        localStorage.setItem("RestCountriesApiDarkMode", true);
-        this.selectDarkMode(true);
         this.indexStore.setDarkMode(true);
       }
-    },
-    selectDarkMode(value) {
-      value ? 
-      document.documentElement.classList.add("theme--dark")
-      : 
-      document.documentElement.classList.remove("theme--dark")
-    },
+    }
   }
 }
 </script>
