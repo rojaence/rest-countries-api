@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap');
+
+:root {
+  --dark-blue: hsl(209, 23%, 22%);
+  --very-dark-blue-1: hsl(207, 26%, 17%);
+  --very-dark-blue-2:  hsl(200, 15%, 8%);
+  --very-dark-blue-3: #232f3a;
+  --dark-gray: hsl(0, 0%, 52%);
+  --very-dark-gray: #e5e5e5;
+  --very-light-gray: hsl(0, 0%, 98%);
+  --white: hsl(0, 0%, 100%);
+  --main-txt-size: 14px;
+  --primary-txt-size: 16px;
+  --fade-transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: var(--main-txt-size);
+}
+
+/* semantic color variables for this project */
+.theme {
+  --main-bg-color: var(--very-light-gray);
+  --primary-bg-color: var(--white);
+  --main-txt-color: var(--very-dark-blue-2);  
+  --icon-bg-color: var(--dark-blue);
+  --btn-hover-color: var(--very-dark-gray);
+  &--dark {
+    --main-bg-color: var(--very-dark-blue-1);
+    --primary-bg-color: var(--dark-blue);
+    --main-txt-color: var(--white);
+    --icon-bg-color: var(--white);
+    --btn-hover-color: var(--very-dark-blue-3);
+  }
+}
+
+@for $i from 1 through 3 {
+  .elevation-#{$i} {
+    box-shadow: #{$i}px #{$i}px #{$i * 3}px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.icon {
+  fill: var(--icon-bg-color);
+  stroke: none;
+  width: 20px;
+  height: 20px;
+  &--outlined {
+    fill: none;
+    stroke: var(--icon-bg-color);
+    stroke-width: 2px;
+  }
+}
+
+.button {
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--main-txt-color);
+  background-color: var(--primary-bg-color);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, filter 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  &:hover {
+    background-color: var(--btn-hover-color);
+  }
+  &:active {
+    filter: brightness(1.02);
+  }
+  @media screen and (min-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.rounded {
+  border-radius: 2rem;
+}
+
+.transparent {
+  background-color: transparent;
+}

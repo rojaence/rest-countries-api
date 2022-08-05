@@ -1,0 +1,22 @@
+@import "./base.scss";
+
+html {
+  background-color: var(--main-bg-color);
+}
+
+body {
+  min-height: 100vh;
+}
+
+#app {
+  margin: 0 auto;
+  font-weight: normal;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: var(--main-txt-color);
+}
+
+.app-footer {
+  margin-top: auto;
+}
