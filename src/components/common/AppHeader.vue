@@ -50,6 +50,7 @@ export default {
   top: 0;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   transition: var(--fade-transition);
+  z-index: 100;
   &__title {
     margin: 0;
     font-size: 0.8rem;
