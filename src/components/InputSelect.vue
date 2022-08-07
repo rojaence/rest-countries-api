@@ -47,6 +47,11 @@ export default {
       toggleList(false);
     };
 
+    const resetValue = () => {
+      props.selectedValue = '';
+      selectedItem.value = props.items[0];
+    }
+
     onMounted(() => {
       selectedItem.value = props.selectedValue;
     });
@@ -64,6 +69,7 @@ export default {
 <style lang="scss" scoped>
 .field-select, .icon, .field__label {
   cursor: pointer;
+  user-select: none;
 }
 .field__label {
   height: 100%;
@@ -114,6 +120,7 @@ export default {
   &__item {
     padding: 0.5rem 1.5rem;
     user-select: none;
+    font-weight: 600;
     cursor: pointer;
     &:hover {
       background-color: var(--btn-hover-color);

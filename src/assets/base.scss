@@ -12,10 +12,24 @@
   --main-txt-size: 14px;
   --primary-txt-size: 16px;
   --accent-dark-blue: #406385;
-  --accent-light-blue: rgb(192, 225, 243);
+  --accent-light-blue: #c0e1f3;
+  --accent-dark-blue-alt: #466C91;
+  --accent-light-blue-alt: #abc8d9;
   --fade-transition: background-color 0.2s ease-out, color 0.2s ease-out;
   font-family: 'Nunito Sans', sans-serif;
   font-size: var(--main-txt-size);
+  overflow-y: scroll;
+
+  // Styles for scrollbar to coincide with the color theme
+  ::-webkit-scrollbar {
+    width: 0.6rem;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+  }
 }
 
 /* semantic color variables for this project */
@@ -26,6 +40,8 @@
   --icon-bg-color: var(--dark-blue);
   --btn-hover-color: var(--gray);
   --active-color: var(--accent-light-blue);
+  --accent-color: var(--accent-light-blue-alt);
+  --scrollbar-bg: #E0E0E0;
   &--dark {
     --main-bg-color: var(--very-dark-blue-1);
     --primary-bg-color: var(--dark-blue);
@@ -33,6 +49,8 @@
     --icon-bg-color: var(--white);
     --btn-hover-color: var(--very-dark-blue-3);
     --active-color: var(--accent-dark-blue);
+    --accent-color: var(--accent-dark-blue-alt);
+    --scrollbar-bg: #263340;
   }
 }
 
@@ -78,6 +96,19 @@
   @media screen and (min-width: 768px) {
     font-size: 1rem;
   }
+  &--icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: .7rem;
+    &:hover {
+      background-color: var(--active-color);
+    }
+  }
+}
+
+body {
+  @extend .fade-transition;
 }
 
 .field {
@@ -91,10 +122,10 @@
   gap: 1rem;
   border-radius: 5px;
   background-color: var(--primary-bg-color);
-  font-weight: 600;
   &__input {
     color: var(--main-txt-color);
     width: 100%;
+    font-weight: 600;
     outline: none;
     border: none;
     background-color: inherit;
@@ -113,6 +144,10 @@
   }
 }
 
+.container {
+  padding: 2rem 1rem;
+}
+
 .rounded {
   border-radius: 2rem;
 }
@@ -126,4 +161,18 @@
 
 .transparent {
   background-color: transparent;
+}
+
+.fade-transition {
+  animation: fade-in 0.3s ease-out;
+}
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
