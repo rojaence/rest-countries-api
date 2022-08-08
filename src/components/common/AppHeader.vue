@@ -53,7 +53,7 @@ export default {
   z-index: 100;
   &__title {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 800;
     color: var(--main-txt-color);
   }

@@ -1,12 +1,12 @@
 <template>
-  <article class="card elevation-2 fade-transition">
+  <article class="card elevation-2">
     <header class="card__header">
-      <img :src="data.flags.png" alt="Country flag" class="card__flag">
+      <img :src="data.flags.svg" alt="Country flag" class="card__flag">
     </header>
     <div class="card__body">
       <h2 class="card__title">{{ data.name.common }}</h2>
-      <ul class="card__list card__list--basic-data" v-for="item in basicData" :key="item.label">
-        <li class="card__item">
+      <ul class="card__list card__list--basic-data">
+        <li class="card__item"  v-for="item in basicData" :key="item.label">
           <span class="card__label">{{ item.label }}:</span>
           <span class="card__value" v-if="item.label === 'Capital'">{{ item.value ? item.value[0] : '' }}</span>
           <span class="card__value" v-else-if="item.label === 'Population'">{{ item.value.toLocaleString('en-US', { minimumFractionDigits: 0 }) }}</span>
@@ -82,15 +82,30 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
+  user-select: none;
+  height: 360px;
+  transition: box-shadow 0.1s ease-out, transform 0.1s ease-out, var(--fade-transition);
+  cursor: pointer;
+  &:hover {
+    @extend .elevation-5 !optional;
+    transform: scale(1.02);
+  }
+  &:active {
+    transform: scale(1);
+    filter: var(--brightness-filter);
+  }
+  &__title {
+    // Break the text into two lines if it's too long
+    font-size: var(--primary-txt-size);
+  }
   &__flag {
-    background-color: red;
-    max-width: 100%;
-    height: 200px;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
     border-radius: 5px 5px 0 0;
   }
   &__body, &__footer {
     padding: 1rem 2rem;
-    margin-bottom: 1.5rem;
   }
   &__list {
     list-style: none;

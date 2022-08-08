@@ -15,6 +15,8 @@
   --accent-light-blue: #c0e1f3;
   --accent-dark-blue-alt: #466C91;
   --accent-light-blue-alt: #abc8d9;
+  --error-color-dark: hwb(4 21% 4%);
+  --error-color-light: #ff8262;
   --fade-transition: background-color 0.2s ease-out, color 0.2s ease-out;
   font-family: 'Nunito Sans', sans-serif;
   font-size: var(--main-txt-size);
@@ -42,6 +44,8 @@
   --active-color: var(--accent-light-blue);
   --accent-color: var(--accent-light-blue-alt);
   --scrollbar-bg: #E0E0E0;
+  --brightness-filter: brightness(0.98);
+  --error-color: var(--error-color-light); 
   &--dark {
     --main-bg-color: var(--very-dark-blue-1);
     --primary-bg-color: var(--dark-blue);
@@ -51,10 +55,12 @@
     --active-color: var(--accent-dark-blue);
     --accent-color: var(--accent-dark-blue-alt);
     --scrollbar-bg: #263340;
+    --brightness-filter: brightness(1.03);
+    --error-color: var(--error-color-dark);
   }
 }
 
-@for $i from 1 through 3 {
+@for $i from 1 through 5 {
   .elevation-#{$i} {
     box-shadow: #{$i}px #{$i}px #{$i * 3}px rgba(0, 0, 0, 0.2);
   }
@@ -74,6 +80,7 @@
 
 .button {
   border: none;
+  user-select: none;
   border-radius: 4px;
   padding: 0.6rem 1.2rem;
   box-sizing: border-box;
@@ -83,7 +90,7 @@
   background-color: var(--primary-bg-color);
   cursor: pointer;
   outline: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, filter 0.1s ease;
+  transition: transform 0.2s ease, filter 0.1s ease, var(--fade-transition);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -96,6 +103,12 @@
   @media screen and (min-width: 768px) {
     font-size: 1rem;
   }
+  &--small {
+    width: 120px;
+    @media screen and (min-width: 768px) {
+      
+    }
+  }
   &--icon {
     width: 48px;
     height: 48px;
@@ -105,11 +118,16 @@
       background-color: var(--active-color);
     }
   }
+  &--link {
+    text-decoration: none;
+    justify-content: center;
+    font-weight: 600;
+    &:hover {
+      background-color: var(--active-color);
+    }
+  }
 }
 
-body {
-  @extend .fade-transition;
-}
 
 .field {
   display: flex;
@@ -122,6 +140,7 @@ body {
   gap: 1rem;
   border-radius: 5px;
   background-color: var(--primary-bg-color);
+  transition: var(--fade-transition);
   &__input {
     color: var(--main-txt-color);
     width: 100%;
@@ -145,7 +164,7 @@ body {
 }
 
 .container {
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
 .rounded {
@@ -163,16 +182,44 @@ body {
   background-color: transparent;
 }
 
-.fade-transition {
-  animation: fade-in 0.3s ease-out;
+.list-move,
+.list-transition-enter-active,
+.list-transition-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.list-transition-enter-from,
+.list-transition-leave-to {
+  opacity: 0;
+}
+
+.list-leave-action {
+  position: absolute;
 }
 
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.fade-transition-enter-active,
+.fade-transition-leave-active {
+  transition: opacity 0.1s ease;
 }
+
+.fade-transition-enter-from,
+.fade-transition-leave-to {
+  opacity: 0;
+}
+
+// Slide fade
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+

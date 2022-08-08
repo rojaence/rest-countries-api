@@ -47,11 +47,6 @@ export default {
       toggleList(false);
     };
 
-    const resetValue = () => {
-      props.selectedValue = '';
-      selectedItem.value = props.items[0];
-    }
-
     onMounted(() => {
       selectedItem.value = props.selectedValue;
     });

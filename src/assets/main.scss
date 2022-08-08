@@ -1,6 +1,7 @@
 @import "./base.scss";
 
 html {
+  transition: var(--fade-transition);
   background-color: var(--main-bg-color);
 }
 
@@ -18,7 +19,6 @@ body {
 }
 
 .main {
-  // padding: 2rem 1rem;
   width: 100%;
   box-sizing: border-box;
   @media screen and (min-width: 768px) {

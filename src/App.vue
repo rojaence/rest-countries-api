@@ -26,13 +26,16 @@ export default {
     }
   },
 }
-
 </script>
 
 <template>
   <app-header></app-header>
   <main class="main">
-    <RouterView />
+    <router-view v-slot="{ Component }">
+      <transition name="slide-fade" mode="out-in" appear>
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </main>
   <app-footer></app-footer>
 </template>
