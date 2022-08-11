@@ -8,33 +8,19 @@
   </header>
 </template>
 
-<script>
-import { RouterLink } from 'vue-router'
+<script setup>
 import { useIndexStore } from '@/stores/index'
 import IconTheme from '@/components/icons/IconTheme.vue'
-import IconEarth from '@/components/icons/IconEarth.vue'
 import ThemeProvider from '@/services/ThemeProvider'
 
-export default {
-  name: 'AppHeader',
-  setup() {
-    const indexStore = useIndexStore();
-    const themeProvider = new ThemeProvider();
-    return { indexStore, themeProvider }
-  },
-  components: {
-    RouterLink,
-    'icon-theme': IconTheme,
-    'icon-earth': IconEarth,
-  },
-  methods: {
-    setAppTheme() {
-      if (this.themeProvider.setDarkMode() === false) {
-        this.indexStore.setDarkMode(false);
-      } else {
-        this.indexStore.setDarkMode(true);
-      }
-    }
+const indexStore = useIndexStore();
+const themeProvider = new ThemeProvider();
+
+const setAppTheme = () => {
+  if (themeProvider.setDarkMode() === false) {
+    indexStore.setDarkMode(false);
+  } else {
+    indexStore.setDarkMode(true);
   }
 }
 </script>

@@ -10,14 +10,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import IconCloseOutline from '@/components/icons/IconCloseOutline.vue'
-
-export default {
-  components: {
-    'icon-close-outline': IconCloseOutline
-  },
-}
 </script>
 
 <style lang="scss" scoped>

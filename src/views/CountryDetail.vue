@@ -7,49 +7,35 @@
       </router-link>
     </div>
     <div class="container country-data">
-      <country-card :data="countryData" :dense="false"></country-card>
+      <country-card :data="countryData" v-if="countryData" :dense="false"></country-card>
     </div>
   </section>
 </template>
 
-<script>
+<script setup>
 import { RouterLink, useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import CountryCard from '@/components/CountryCard.vue'
 import IconArrow from '@/components/icons/IconArrow.vue'
 
-export default {
-  name: 'CountryDetail',  
-  components: {
-    'router-link': RouterLink,
-    'icon-arrow': IconArrow,
-    'country-card': CountryCard,
+const props = defineProps({
+  cca3: {
+    type: String,
+    default: ''
   },
-  props: {
-    cca3: {
-      type: String,
-      default: ''
-    },
-  },
-  setup() {
-    const countriesStore = useCountriesStore();
-    const route = useRoute();
+});
 
-    const countryData = computed(() => {
-      let data = {};
-      if (route.params.cca3) {
-        data = countriesStore.getCountryData(route.params.cca3);
-      }
-      return data;
-    })
+const countriesStore = useCountriesStore();
+const route = useRoute();
 
-    return {
-      countriesStore,
-      countryData
-    }
+const countryData = computed(() => {
+  if (route.params.cca3) {
+    return countriesStore.getCountryData(route.params.cca3);
+  } else {
+    return null;
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

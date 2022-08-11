@@ -13,52 +13,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import IconChevron from '@/components/icons/IconChevron.vue'
 
-export default {
-  name: 'InputSelect',
-  props: {
-    items: {
-      type: Array,
-      default: []
-    },
-    selectedValue: {
-      type: String,
-      required: false,
-      default: ''
-    }
+const props = defineProps({
+  items: {
+    type: Array,
+    default: []
   },
-  components: {
-    'icon-chevron': IconChevron
-  },
-  setup(props, { emit }) {
-    const open = ref(false);
-    const selectedItem = ref('');
-    
-    const toggleList = (value) => {
-      open.value = value;
-    };
+  selectedValue: {
+    type: String,
+    required: false,
+    default: ''
+  }
+});
 
-    const selectRegion = (item) => {      
-      selectedItem.value = item;
-      emit('change-value', item);
-      toggleList(false);
-    };
+const emit = defineEmits(['change-value']);
 
-    onMounted(() => {
-      selectedItem.value = props.selectedValue;
-    });
+const open = ref(false);
+const selectedItem = ref('');
 
-    return {
-      open,
-      selectedItem,
-      selectRegion,
-      toggleList,
-    }
-  },
-}
+const toggleList = (value) => {
+  open.value = value;
+};
+
+const selectRegion = (item) => {      
+  selectedItem.value = item;
+  emit('change-value', item);
+  toggleList(false);
+};
+
+onMounted(() => {
+  selectedItem.value = props.selectedValue;
+});
 </script>
 
 <style lang="scss" scoped>

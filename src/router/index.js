@@ -20,7 +20,6 @@ const router = createRouter({
       redirect: '/'
     }
   ]
-
 })
 
 router.beforeEach((to) => {

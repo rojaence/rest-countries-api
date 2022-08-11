@@ -8,43 +8,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import IconClose from '@/components/icons/IconClose.vue'
 
-export default {
-  name: 'InputText',
-  props: {
-    hint: {
-      type: String,
-      default: ''
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    }
+const props = defineProps({
+  hint: {
+    type: String,
+    default: ''
   },
-  components: {
-    'icon-close': IconClose
-  },
-  setup(props, { emit }) {
-    const text = ref('');
-
-    const onInput = () => {
-      emit('change-value', text.value);
-    }
-
-    const clearText = () => {
-      text.value = '';
-      emit('change-value', text.value);
-    }
-
-    return {
-      onInput,
-      text,
-      clearText
-    }
+  clearable: {
+    type: Boolean,
+    default: false
   }
+});
+
+const emit = defineEmits(['change-value']);
+
+const text = ref('');
+
+const onInput = () => {
+  emit('change-value', text.value);
+}
+
+const clearText = () => {
+  text.value = '';
+  emit('change-value', text.value);
 }
 </script>
 

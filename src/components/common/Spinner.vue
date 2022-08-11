@@ -3,7 +3,6 @@
 </template>
 
 <style lang="scss" scoped>
-
 .spinner {
   display: grid;
   place-items: center;
@@ -31,7 +30,6 @@
     animation: dual-ring-reverse 0.8s linear infinite;
   }
 }
-
 
 @keyframes dual-ring {
   0% {

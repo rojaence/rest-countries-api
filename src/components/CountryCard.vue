@@ -43,79 +43,70 @@
   </article>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
-export default {
-  name: 'CountryCard',
-  props: {
-    data: {
-      type: Object,
-      required: false
-    },
-    dense: {
-      type: Boolean,
-      required: false,
-      default: true
-    }
+const props = defineProps({
+  data: {
+    type: Object,
+    required: false
   },
-  components: {
-    'router-link': RouterLink,
-  },
-  setup(props) {
-    const basicData = computed(() => {
-      if (props.dense) {
-        return [
-          { label: 'Population', value: props.data.population },
-          { label: 'Capital', value: props.data.capital },
-          { label: 'Region', value: props.data.region }
-        ]
-      } else {
-        return [
-          { label: 'Native Name', value: props.data.name.nativeName},
-          { label: 'Population', value: props.data.population },
-          { label: 'Capital', value: props.data.capital },
-          { label: 'Region', value: props.data.region },
-        ]        
-      }
-    })
-
-    const extraData = computed(() => {
-      return [
-        { label: 'Top Level Domain', value: props.data.tld },
-        { label: 'Currencies', value: props.data.currencies },
-        { label: 'Languages', value: props.data.languages }
-      ]
-    })
-
-    const formatLanguageValues = (languages) => {
-      return Object.values(languages).slice().sort((a, b) => {
-        if (a < b) return -1
-        else if (a > b) return 1
-        else return 0
-      }).join(', ')
-    };
-
-    const formatCurrencyValues = (currencies) => {
-      return Object.values(currencies).slice().map(currency => currency.name).sort((a, b) => {
-        if (a < b) return -1
-        else if (a > b) return 1
-        else return 0
-      }).join(', ')
-    };
-
-    const formatBorderValues = (borders) => {
-      return borders.slice().sort((a, b) => {
-        if (a.name < b.name) return -1
-        else if (a.name > b.name) return 1
-        else return 0
-      })
-    } 
-
-    return { basicData, extraData, formatLanguageValues, formatCurrencyValues, formatBorderValues }
+  dense: {
+    type: Boolean,
+    required: false,
+    default: true
   }
-}
+});
+
+const basicData = computed(() => {
+  if (props.dense) {
+    return [
+      { label: 'Population', value: props.data.population },
+      { label: 'Capital', value: props.data.capital },
+      { label: 'Region', value: props.data.region }
+    ]
+  } else {
+    return [
+      { label: 'Native Name', value: props.data.name.nativeName},
+      { label: 'Population', value: props.data.population },
+      { label: 'Capital', value: props.data.capital },
+      { label: 'Region', value: props.data.region },
+    ]        
+  }
+})
+
+const extraData = computed(() => {
+  return [
+    { label: 'Top Level Domain', value: props.data.tld },
+    { label: 'Currencies', value: props.data.currencies },
+    { label: 'Languages', value: props.data.languages }
+  ]
+})
+
+const formatLanguageValues = (languages) => {
+  return Object.values(languages).slice().sort((a, b) => {
+    if (a < b) return -1
+    else if (a > b) return 1
+    else return 0
+  }).join(', ')
+};
+
+const formatCurrencyValues = (currencies) => {
+  return Object.values(currencies).slice().map(currency => currency.name).sort((a, b) => {
+    if (a < b) return -1
+    else if (a > b) return 1
+    else return 0
+  }).join(', ')
+};
+
+const formatBorderValues = (borders) => {
+  return borders.slice().sort((a, b) => {
+    if (a.name < b.name) return -1
+    else if (a.name > b.name) return 1
+    else return 0
+  })
+} 
 </script>
 
 <style lang="scss" scoped>

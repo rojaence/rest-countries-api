@@ -1,31 +1,21 @@
-<script>
-import { RouterLink, RouterView } from 'vue-router'
+<script setup>
+import { RouterView } from 'vue-router'
+import { onBeforeMount } from 'vue'
 import { useIndexStore } from '@/stores/index'
 import AppHeader from './components/common/AppHeader.vue'
 import AppFooter from './components/common/AppFooter.vue'
 import ThemeProvider from '@/services/ThemeProvider'
 
-export default {
-  name: 'App',
-  setup() {
-    const indexStore = useIndexStore();
-    const themeProvider = new ThemeProvider();
-    return { indexStore, themeProvider }
-  },
-  components: {
-    RouterLink,
-    RouterView,
-    'app-header': AppHeader,
-    'app-footer': AppFooter,
-  },
-  beforeMount() {
-    if (this.themeProvider.setThemeOnInit() === false) {
-      this.indexStore.setDarkMode(false);
-    } else {
-      this.indexStore.setDarkMode(true);
-    }
-  },
-}
+const indexStore = useIndexStore();
+const themeProvider = new ThemeProvider();
+
+onBeforeMount(() => {
+  if (themeProvider.setThemeOnInit() === false) {
+    indexStore.setDarkMode(false);
+  } else {
+    indexStore.setDarkMode(true);
+  }
+});
 </script>
 
 <template>
