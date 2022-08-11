@@ -10,14 +10,13 @@
       <icon-refresh class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems">Obtener regiones</icon-refresh>
     </div>
       <div class="countries-gallery">
-        <Transition name="fade-transition" mode="out-in">
+        
           <TransitionGroup name="list-transition" tag="ul" class="countries-gallery__list">
-              <li class="countries-gallery__item" v-for="(item, index) in filteredCountryItems" :key="index">
-                  <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
-              </li>
+                <li class="countries-gallery__item" v-for="(item, index) in filteredCountries.splice(0, 10)" :key="index">
+                    <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
+                </li>
           </TransitionGroup>
-        </Transition>
-        <div class="no-data" v-if="filteredCountryItems.length === 0 && !countriesStore.loadingData" :class="{ 'no-data--show' : filteredCountryItems.length === 0 }">
+        <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
           <icon-alert class="no-data__icon"></icon-alert>
           <span class="no-data__text">No data found</span>
         </div>
@@ -56,7 +55,6 @@ export default {
     const countriesStore = useCountriesStore();
     const filteredName = ref('');
     const selectedRegion = ref('all');
-    const filteredCountryItems = ref([]);
     const router = useRouter();
 
     const setRegionValue = (value) => {
@@ -65,23 +63,22 @@ export default {
       } else {
         selectedRegion.value = value;
       }
-      filterCountries();
     }
 
     const getCountriesItems = async () =>{
-      filteredCountryItems.value = [];
+      if (countriesStore.loadingData) {
+        return;
+      }
       try {
         await countriesStore.getCountries();
         countriesStore.errorConnection = false;
       } catch(error) {
         countriesStore.errorConnection = true;
       }
-      filterCountries();
     }
 
-    const setNameValue = async (value) => {
+    const setNameValue = (value) => {
       filteredName.value = value;
-      filterCountries();
     }
 
     const regionItems = computed(() => {
@@ -102,37 +99,42 @@ export default {
        })
     };
 
-    const filterCountries = () => {
-      let data = [];
+    const filteredCountries = computed(() => {
+      let data = countriesStore.countries.slice().sort((a, b) => {
+        if(a.name.common < b.name.common) return -1;
+        if(a.name.common > b.name.common) return 1;
+        return 0;
+      });
       let countryName = filteredName.value || '';
       let region = selectedRegion.value || 'all';
         if (!countryName && !region || !countryName && region === 'all') {
-          data = countriesStore.countries;
+          return data;
         } else if (countryName && !region) {
-          data = countriesStore.countries.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+          return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
         } else if (!countryName && region) {
-          data = countriesStore.countries.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+          return data.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
         } else if (countryName && region === 'all') {
-          data = countriesStore.countries.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+          return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
         } else {
-          data = countriesStore.countries.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+          return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
         }
-      data = data.sort((a, b) => {
-        if (a.name.common < b.name.common) {
-          return -1;
-        }
-        if (a.name.common > b.name.common) {
-          return 1;
-        }
-        return 0;
-      });
-      filteredCountryItems.value = data;
-    };
+    });
+
     onBeforeMount(() => {
-      if (!countriesStore.hasCountries) getCountriesItems()
-      else filterCountries();
+      if (!countriesStore.hasCountries) getCountriesItems();
     })
-    return { countriesStore, regionItems, filteredName, selectedRegion, setRegionValue, setNameValue, filteredCountryItems, filterCountries, getCountriesItems, showItemDetails }
+
+    return { 
+      countriesStore, 
+      regionItems, 
+      filteredName, 
+      selectedRegion, 
+      setRegionValue, 
+      setNameValue, 
+      filteredCountries, 
+      getCountriesItems, 
+      showItemDetails 
+    }
   }
 }
 </script>
@@ -190,15 +192,22 @@ export default {
   position: relative;
   box-sizing: border-box;
   &__list {
-    padding: 1rem 0;
+    padding: 1rem;
     box-sizing: border-box;
     list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
     justify-content: center;
     gap: 4rem;
+    transition: opacity .2s ease-out;
     @media screen and (min-width: 768px) {
       width: 100%;
+    }
+    &--hide {
+      opacity: 0;
+    }
+    &--show {
+      opacity: 1;
     }
   }
 } 
@@ -222,6 +231,22 @@ export default {
     animation: fade-in-show 0.2s ease-in-out;
   }
 }
+
+.fade-animation {
+  animation: fade-show 0.2s ease-in-out;
+}
+@keyframes fade-show {
+  0% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 
 @keyframes fade-in-show {
   0% {

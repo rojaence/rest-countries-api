@@ -32,7 +32,7 @@ export default {
   <app-header></app-header>
   <main class="main">
     <router-view v-slot="{ Component }">
-      <transition name="slide-fade" mode="out-in" appear>
+      <transition name="fade-transition" mode="out-in" appear>
         <component :is="Component" />
       </transition>
     </router-view>

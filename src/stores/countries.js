@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 export const useCountriesStore = defineStore({
-  id: 'countries',
+  id: 'countriesStore',
   state: () => ({
     countries: [],
     countryCodes: [],
@@ -12,7 +12,10 @@ export const useCountriesStore = defineStore({
   getters: {
     hasCountries: (state) => {
       return state.countries.length > 0;
-    }
+    },
+    getCountryData: (state) => {
+      return (code) => state.countries.find(country => country.keyCodes.includes(code));
+    },
   },
   actions: {
     async getCountries() {
@@ -21,52 +24,35 @@ export const useCountriesStore = defineStore({
       try {
         const request = await fetch('https://restcountries.com/v3.1/all',);
         const response = await request.json();
-        let regions = response.map(country => country.region);
-        regions = [...new Set(regions)];
-  
-        let codes = response.map(country => {
-          return {
-            name: country.name.common,
-            codes: [country.cca, country.cca2, country.cca3, country.cioc],
-          }
+        let regions = [], codes = [], countries = [];
+        response.forEach(country => {
+          regions.push(country.region);
+          codes.push(
+            { name: country.name.common, 
+              codes: [country.cca2 || '', country.cca3 || '', country.cioc || ''].filter(code => code !== '')
+            });
+          country.keyCodes = [country.cca2 || '', country.cca3 || '', country.cioc || ''].filter(code => code !== '');
         });
+        regions = [...new Set(regions)];
         this.countryCodes = codes;
         this.regions = regions;
-  
-        let data = response.map(country => {
-          let countryBorders = country.borders ? 
-          (
-            country.borders.map(border => {
-              return this.countryCodes.find(c => c.codes.includes(border)).name;
-            })
-          ) : 
-          (
-            []
-          )
-          return {
-            name: country.name,
-            region: country.region,
-            capital: country.capital,
-            population: country.population,
-            flags: country.flags,
-            subregion: country.subregion,
-            tld: country.tld,
-            currencies: country.currencies,
-            languages: country.languages,
-            borders: countryBorders,
-            cca3: country.cca3,
+        response.forEach(country => {
+          if (country.borders) {
+            country.borders = country.borders.map(border => {
+              return {
+                name: this.countryCodes.find(code => code.codes.includes(border)).name,
+                code: border,
+              }
+            });
           }
-        })
-        this.countries = data;
-        this.loadingData = false; 
+          countries.push(country);
+        });
+        this.countries = countries;
       } catch(error) {
         this.errorConnection = true;
+      } finally {
         this.loadingData = false;
       }
     },
-
-    getCountryData(cca3) {
-      return this.countries.find(country => country.cca3 === cca3);
-    }
   }
 })

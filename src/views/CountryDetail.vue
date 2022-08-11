@@ -6,15 +6,15 @@
         <span>Back</span>
       </router-link>
     </div>
-    <div class="container">
-      <country-card :data="country.data" :dense="true"></country-card>
+    <div class="container country-data">
+      <country-card :data="countryData" :dense="false"></country-card>
     </div>
   </section>
 </template>
 
 <script>
 import { RouterLink, useRoute } from 'vue-router'
-import { reactive, onBeforeMount } from 'vue'
+import { computed } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import CountryCard from '@/components/CountryCard.vue'
 import IconArrow from '@/components/icons/IconArrow.vue'
@@ -33,21 +33,20 @@ export default {
     },
   },
   setup() {
-    const country = reactive({
-      data: {}
-    });
     const countriesStore = useCountriesStore();
     const route = useRoute();
 
-    onBeforeMount(() => {
+    const countryData = computed(() => {
+      let data = {};
       if (route.params.cca3) {
-        country.data = countriesStore.getCountryData(route.params.cca3);
-      } 
+        data = countriesStore.getCountryData(route.params.cca3);
+      }
+      return data;
     })
 
     return {
       countriesStore,
-      country
+      countryData
     }
   }
 }
@@ -55,7 +54,11 @@ export default {
 
 <style lang="scss" scoped>
 .details-view {
-  padding: 1rem 0;
+  padding: 1rem;
+}
+
+.country-data {
+  padding-top: 3rem;
 }
 
 .header-options {
@@ -66,5 +69,6 @@ export default {
   background-color: var(--main-bg-color);
   padding: 1rem;
   box-sizing: border-box;
+  transition: var(--fade-transition);
 }
 </style>
