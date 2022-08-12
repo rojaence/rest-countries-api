@@ -1,7 +1,7 @@
 <template>
   <article class="card" :class="[dense ? 'elevation-2 card--animation' : 'card--expand']">
     <header class="card__header">
-      <img :src="data.flags.svg" alt="Country flag" class="card__flag">
+      <img :src="data.flags.png" alt="Country flag" class="card__flag">
     </header>
     <div class="card__body">
       <h2 class="card__title">{{ data.name.common }}</h2>
@@ -62,26 +62,26 @@ const props = defineProps({
 const basicData = computed(() => {
   if (props.dense) {
     return [
-      { label: 'Population', value: props.data.population },
-      { label: 'Capital', value: props.data.capital },
-      { label: 'Region', value: props.data.region }
-    ]
+      { label: 'Population', value: props.data.population || '' },
+      { label: 'Capital', value: props.data.capital || '' },
+      { label: 'Region', value: props.data.region || ''}
+    ].filter(item => item.value);
   } else {
     return [
-      { label: 'Native Name', value: props.data.name.nativeName},
-      { label: 'Population', value: props.data.population },
-      { label: 'Capital', value: props.data.capital },
-      { label: 'Region', value: props.data.region },
-    ]        
+      { label: 'Native Name', value: props.data.name.nativeName || ''},
+      { label: 'Population', value: props.data.population || ''},
+      { label: 'Capital', value: props.data.capital || ''},
+      { label: 'Region', value: props.data.region || ''},
+    ].filter(item => item.value);
   }
 })
 
 const extraData = computed(() => {
   return [
-    { label: 'Top Level Domain', value: props.data.tld },
-    { label: 'Currencies', value: props.data.currencies },
-    { label: 'Languages', value: props.data.languages }
-  ]
+    { label: 'Top Level Domain', value: props.data.tld || ''},
+    { label: 'Currencies', value: props.data.currencies || ''},
+    { label: 'Languages', value: props.data.languages || ''}
+  ].filter(item => item.value);
 })
 
 const formatLanguageValues = (languages) => {
@@ -203,6 +203,11 @@ const formatBorderValues = (borders) => {
       display: grid;
       grid-template-areas: 'cardTitle cardTitle''basicData extraData';
       row-gap: 1rem;
+    }
+
+    .card__flag {
+      max-height: 500px;
+      object-fit: contain;
     }
     .card__title {
       grid-area: cardTitle;

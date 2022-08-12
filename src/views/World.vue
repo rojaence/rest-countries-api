@@ -1,23 +1,24 @@
 <template>
   <section class="container world-view">
     <div class="filter-options">
-      <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" @change-value="setNameValue">
+      <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="200" @change-value="setNameValue">
         <template #icon>
           <icon-search></icon-search>
         </template>
       </input-text>
-      <input-select class="filter-options__select" @change-value="setRegionValue" :selected-value="regionItems[0]" :items="regionItems" ref="regionSelectInput"></input-select>
+      <input-select 
+        class="filter-options__select" @change-value="setRegionValue" :selected-value="regionItems[0]" :items="regionItems" ref="regionSelectInput"></input-select>
       <icon-refresh class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems">Obtener regiones</icon-refresh>
     </div>
     <div class="countries-gallery">
-        <TransitionGroup name="list-transition" tag="ul" class="countries-gallery__list">
-            <li class="countries-gallery__item" v-for="(item, index) in filteredCountries.splice(0, 10)" :key="index">
-                <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
-            </li>
-        </TransitionGroup>
+        <ul class="countries-gallery__list" ref="countriesList">
+          <li class="countries-gallery__item" v-for="(item, index) in filteredCountries" :key="index">      
+            <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
+          </li>
+        </ul>
       <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
         <icon-alert class="no-data__icon"></icon-alert>
-        <span class="no-data__text">No data found</span>
+        <span class="no-data__text">No data found for "{{ filteredName }}"</span>
       </div>
       <spinner v-if="countriesStore.loadingData"></spinner>
       <error-connection v-if="countriesStore.errorConnection"></error-connection>
@@ -82,7 +83,7 @@ const showItemDetails = (item) => {
     params: {
       cca3: item.cca3
     }
-    })
+  })
 };
 
 const filteredCountries = computed(() => {
@@ -93,17 +94,17 @@ const filteredCountries = computed(() => {
   });
   let countryName = filteredName.value || '';
   let region = selectedRegion.value || 'all';
-    if (!countryName && !region || !countryName && region === 'all') {
-      return data;
-    } else if (countryName && !region) {
-      return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
-    } else if (!countryName && region) {
-      return data.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
-    } else if (countryName && region === 'all') {
-      return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
-    } else {
-      return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
-    }
+  if (!countryName && !region || !countryName && region === 'all') {
+    return data;
+  } else if (countryName && !region) {
+    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+  } else if (!countryName && region) {
+    return data.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+  } else if (countryName && region === 'all') {
+    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+  } else {
+    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+  }
 });
 
 onBeforeMount(() => {
@@ -171,15 +172,13 @@ onBeforeMount(() => {
     grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
     justify-content: center;
     gap: 4rem;
-    transition: opacity .2s ease-out;
+    transition: opacity .1s ease-out;
+    opacity: 1;
     @media screen and (min-width: 768px) {
       width: 100%;
     }
     &--hide {
       opacity: 0;
-    }
-    &--show {
-      opacity: 1;
     }
   }
 } 
@@ -194,10 +193,17 @@ onBeforeMount(() => {
   justify-content: center;
   gap: 1rem;
   position: absolute;
+  max-width: 500px;
+  padding: 1rem;
   &__icon {
     opacity: 0.5;
     width: 128px;
     height: 128px;
+  }
+  &__text {
+    display: grid;
+    text-align: center;
+    word-break: break-word;
   }
   &--show {
     animation: fade-in-show 0.2s ease-in-out;

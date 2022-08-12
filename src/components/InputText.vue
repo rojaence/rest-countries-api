@@ -3,7 +3,7 @@
     <label for="search-input" class="field__label">
       <slot name="icon"></slot>
     </label>
-    <input type="text" :placeholder="hint" class="field__input" id="search-input" autocomplete="off" @input="onInput" v-model="text">
+    <input type="text" :placeholder="hint" :maxlength="limit" class="field__input" id="search-input" autocomplete="off" @input="onInput" v-model="text">
     <icon-close class="icon-close" v-if="clearable && text != ''" @click="clearText"></icon-close>
   </div>
 </template>
@@ -20,6 +20,10 @@ const props = defineProps({
   clearable: {
     type: Boolean,
     default: false
+  },
+  limit: {
+    type: Number,
+    default: 500
   }
 });
 

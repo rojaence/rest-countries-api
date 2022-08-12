@@ -6,15 +6,15 @@
         <span>Back</span>
       </router-link>
     </div>
-    <div class="container country-data">
-      <country-card :data="countryData" v-if="countryData" :dense="false"></country-card>
+    <div class="container country-data" ref="detailsContainer">
+        <country-card :data="countryData" :dense="false"></country-card>
     </div>
   </section>
 </template>
 
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import CountryCard from '@/components/CountryCard.vue'
 import IconArrow from '@/components/icons/IconArrow.vue'
@@ -28,12 +28,24 @@ const props = defineProps({
 
 const countriesStore = useCountriesStore();
 const route = useRoute();
+const detailsContainer = ref(null);
 
 const countryData = computed(() => {
   if (route.params.cca3) {
     return countriesStore.getCountryData(route.params.cca3);
   } else {
     return null;
+  }
+})
+
+watch(() => props.cca3, (value) => {
+  if (value && detailsContainer.value) {
+    detailsContainer.value.animate([
+      { opacity: 0 },
+      { opacity: 1 },
+    ], {
+      duration: 200,
+    })
   }
 })
 </script>
