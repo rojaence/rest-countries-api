@@ -1,10 +1,12 @@
 <template>
-  <section class="details-view container">
-    <div class="header-options">
-      <router-link class="button button--small button--link elevation-2" :to="{ name: 'World' }">
-        <icon-arrow></icon-arrow>
-        <span>Back</span>
-      </router-link>
+  <section class="details-view">
+    <div class="bar-wrapper">
+      <div class="header-options">
+        <router-link class="button button--small button--link elevation-2" :to="{ name: 'World' }">
+          <icon-arrow></icon-arrow>
+          <span>Back</span>
+        </router-link>
+      </div>
     </div>
     <div class="container country-data" ref="detailsContainer">
         <country-card :data="countryData" :dense="false"></country-card>
@@ -52,7 +54,12 @@ watch(() => props.cca3, (value) => {
 
 <style lang="scss" scoped>
 .details-view {
-  padding: 1rem;
+  padding: 1rem 0;
+}
+
+.country-data, .header-options {
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 .country-data {
@@ -60,11 +67,7 @@ watch(() => props.cca3, (value) => {
 }
 
 .header-options {
-  width: 100%;
-  position: sticky;
-  top: 60px;
   z-index: 95;
-  background-color: var(--main-bg-color);
   padding: 1rem;
   box-sizing: border-box;
   transition: var(--fade-transition);

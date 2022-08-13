@@ -1,22 +1,31 @@
 <template>
   <section class="container world-view">
-    <div class="filter-options">
-      <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="200" @change-value="setNameValue">
-        <template #icon>
-          <icon-search></icon-search>
-        </template>
-      </input-text>
-      <input-select 
-        class="filter-options__select" @change-value="setRegionValue" :selected-value="regionItems[0]" :items="regionItems" ref="regionSelectInput"></input-select>
-      <icon-refresh class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems">Obtener regiones</icon-refresh>
+    <div class="bar-wrapper">
+      <div class="filter-options">
+        <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="250" @change-value="setNameValue">
+          <template #icon>
+            <icon-search></icon-search>
+          </template>
+        </input-text>
+        <input-select 
+          class="filter-options__select" @change-value="setRegionValue" :selected-value="regionItems[0]" :items="regionItems" ref="regionSelectInput"></input-select>
+        <icon-refresh class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems">Obtener regiones</icon-refresh>
+        <div class="control">
+          <div class="control__actions">
+            <icon-chevron class="button button--icon transparent icon--left" @click="prevPage()"></icon-chevron>
+            <icon-chevron class="button button--icon transparent icon--right" @click="nextPage()"></icon-chevron>
+          </div>
+          <span class="control__pagination">{{ pagination }}</span>
+        </div>
+      </div>
     </div>
     <div class="countries-gallery">
-        <ul class="countries-gallery__list" ref="countriesList">
-          <li class="countries-gallery__item" v-for="(item, index) in filteredCountries" :key="index">      
+        <transition-group class="countries-gallery__list" ref="countriesList" tag="ul" name="list-transition">
+          <li class="countries-gallery__item" v-for="(item, index) in filteredCountries.slice(initialIndex, finalIndex)" :key="index">      
             <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
           </li>
-        </ul>
-      <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
+        </transition-group>
+      <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData && !countriesStore.errorConnection" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
         <icon-alert class="no-data__icon"></icon-alert>
         <span class="no-data__text">No data found for "{{ filteredName }}"</span>
       </div>
@@ -28,16 +37,21 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import InputSelect from '@/components/InputSelect.vue'
 import InputText from '@/components/InputText.vue'
 import IconSearch from '@/components/icons/IconSearch.vue'
 import IconAlert from '@/components/icons/IconAlert.vue'
+import IconChevron from '@/components/icons/IconChevron.vue'
 import IconRefresh from '@/components/icons/IconRefresh.vue'
-import Spinner from '@/components/common/Spinner.vue'
+import Spinner from '@/components/Spinner.vue'
 import CountryCard from '@/components/CountryCard.vue'
 import ErrorConnection from '@/components/ErrorConnection.vue'
+
+const initialIndex = ref(0);
+const maxPageItems = ref(28);
+const finalIndex = ref(0);
 
 const countriesStore = useCountriesStore();
 const filteredName = ref('');
@@ -53,14 +67,13 @@ const setRegionValue = (value) => {
 }
 
 const getCountriesItems = async () =>{
-  if (countriesStore.loadingData) {
-    return;
-  }
+  if (countriesStore.loadingData) return;
   try {
     await countriesStore.getCountries();
-    countriesStore.errorConnection = false;
-  } catch(error) {
+  } catch (error) {
     countriesStore.errorConnection = true;
+  } finally {
+    countriesStore.loadingData = false;
   }
 }
 
@@ -70,10 +83,12 @@ const setNameValue = (value) => {
 
 const regionItems = computed(() => {
   let items = [];
-  items.push('All regions')
-  countriesStore.regions.forEach(region => {
-    items.push(region);
-  });
+  items.push('All regions');
+  if (countriesStore.regions.length > 0) {
+    countriesStore.regions.forEach(region => {
+      items.push(region);
+    });
+  }
   return items;
 })
 
@@ -87,11 +102,8 @@ const showItemDetails = (item) => {
 };
 
 const filteredCountries = computed(() => {
-  let data = countriesStore.countries.slice().sort((a, b) => {
-    if(a.name.common < b.name.common) return -1;
-    if(a.name.common > b.name.common) return 1;
-    return 0;
-  });
+  resetPagination();
+  let data = countriesStore.countries.slice();
   let countryName = filteredName.value || '';
   let region = selectedRegion.value || 'all';
   if (!countryName && !region || !countryName && region === 'all') {
@@ -107,31 +119,65 @@ const filteredCountries = computed(() => {
   }
 });
 
+const pagination = computed(() => {
+  let dataLength = filteredCountries.value.length;
+  if (dataLength > 0) {
+    if (initialIndex.value === 0) {
+      finalIndex.value = dataLength < maxPageItems.value ? dataLength : maxPageItems.value;
+    }
+    if (finalIndex.value > dataLength) return `${initialIndex.value + 1} - ${dataLength} of ${dataLength}`;
+    return `${initialIndex.value + 1} - ${finalIndex.value} of ${dataLength}`;
+  }
+  else return '0 - 0 of 0';
+});
+
+const prevPage = () => {
+  if (initialIndex.value === 0 || filteredCountries.value.length === 0) return;
+  initialIndex.value -= maxPageItems.value;
+  finalIndex.value -= maxPageItems.value;
+}
+
+const nextPage = () => {
+  let dataLength = filteredCountries.value.length;
+  if (dataLength === 0 || finalIndex.value === dataLength) return;
+  if (initialIndex.value + maxPageItems.value < dataLength) {
+    initialIndex.value += maxPageItems.value;
+    finalIndex.value += maxPageItems.value;
+  }
+}
+
+const resetPagination = () => {
+  initialIndex.value = 0;
+  finalIndex.value = 0;
+}
+
 onBeforeMount(() => {
   if (!countriesStore.hasCountries) getCountriesItems();
 })
+
+onMounted(() => {
+});
 </script>
 
 <style lang="scss">
 .world-view {
   padding: 1rem 0;
 }
+
 .filter-options {
+  max-width: 1440px;
+  margin: 0 auto;
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
-  position: sticky;
-  top: 60px;
-  z-index: 95;
-  background-color: var(--main-bg-color);
-  padding: 1rem;
+  padding: 1rem 1rem .5rem;
   box-sizing: border-box;
   transition: var(--fade-transition);
-  grid-template-rows: repeat(2, auto);
   grid-template-areas: 
     "search search"
-    "select refresh";
-  row-gap: 3rem;
+    "select refresh"
+    "controls controls";
+  row-gap: .8rem;
   column-gap: 1rem;
   &__search {
     grid-area: search;
@@ -144,9 +190,9 @@ onBeforeMount(() => {
   }
   @media screen and (min-width: 768px) {
     grid-template-columns: 1fr repeat(2, auto);
-    grid-template-rows: 1fr;
     grid-template-areas: 
-      "search select refresh";
+      "search select refresh"
+      "controls controls controls";
     &__select {
       justify-self: flex-end;
     }
@@ -164,14 +210,16 @@ onBeforeMount(() => {
   min-height: 390px;
   position: relative;
   box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
   &__list {
-    padding: 1rem;
+    padding: 1rem 1rem 1rem;
     box-sizing: border-box;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 320px));
     justify-content: center;
-    gap: 4rem;
+    gap: 3rem;
     transition: opacity .1s ease-out;
     opacity: 1;
     @media screen and (min-width: 768px) {
@@ -207,6 +255,37 @@ onBeforeMount(() => {
   }
   &--show {
     animation: fade-in-show 0.2s ease-in-out;
+  }
+}
+
+.control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+    &__actions {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    &__pagination {
+      font-weight: 600;
+    }
+  .icon--left {
+    transform: rotate(90deg);
+  }
+
+  .icon--right {
+    transform: rotate(-90deg);
+  }
+
+  .button {
+    height: 28px;
+    width: 28px;
+    padding: 2px;
   }
 }
 </style>

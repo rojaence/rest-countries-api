@@ -1,10 +1,10 @@
 <template>
   <header class="app-header">
-    <h1 class="app-header__title">Where in the world?</h1>
-    <button class="button transparent rounded" @click="setAppTheme()">
-      <icon-theme :class="{ 'icon--outlined': !indexStore.darkMode }"></icon-theme>
-      <span class="button__text">Dark Mode</span>
-    </button>
+      <h1 class="app-header__title">Where in the world?</h1>
+      <button class="button transparent rounded" @click="setAppTheme()">
+        <icon-theme :class="{ 'icon--outlined': !indexStore.darkMode }"></icon-theme>
+        <span class="button__text">Dark Mode</span>
+      </button>
   </header>
 </template>
 
@@ -37,6 +37,7 @@ const setAppTheme = () => {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   transition: var(--fade-transition);
   z-index: 100;
+  height: 30px;
   &__title {
     margin: 0;
     font-size: 1rem;

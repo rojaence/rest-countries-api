@@ -4,7 +4,7 @@
   --dark-blue: hsl(209, 23%, 22%);
   --very-dark-blue-1: hwb(209 13% 78%);
   --very-dark-blue-2:  hsl(200, 15%, 8%);
-  --very-dark-blue-3: #232f3a;
+  --very-dark-blue-3: #485c6e;
   --dark-gray: hsl(0, 0%, 52%);
   --gray: #e5e5e5;
   --very-light-gray: hsl(0, 0%, 98%);
@@ -19,6 +19,9 @@
   --error-color-dark: hwb(4 21% 4%);
   --error-color-light: #ff8262;
   --fade-transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  --very-light-gray-80: rgba(250, 250, 250, 0.8);
+  --very-dark-blue-1-80: hsla(209, 26%, 17%, 0.8);
+  
   font-family: 'Nunito Sans', sans-serif;
   font-size: var(--main-txt-size);
   overflow-y: scroll;
@@ -38,6 +41,7 @@
 /* semantic color variables for this project */
 .theme {
   --main-bg-color: var(--very-light-gray);
+  --main-bg-color-80: var(--very-light-gray-80);
   --primary-bg-color: var(--white);
   --main-txt-color: var(--very-dark-blue-2);  
   --icon-bg-color: var(--dark-blue);
@@ -49,6 +53,7 @@
   --error-color: var(--error-color-light); 
   &--dark {
     --main-bg-color: var(--very-dark-blue-1);
+    --main-bg-color-80: var(--very-dark-blue-1-80);
     --primary-bg-color: var(--dark-blue);
     --main-txt-color: var(--white);
     --icon-bg-color: var(--white);
@@ -123,7 +128,6 @@
   }
 }
 
-
 .field {
   display: flex;
   flex-direction: row;
@@ -150,7 +154,7 @@
   }
   @media screen and (min-width: 600px) {
     &--large {
-      max-width: 500px;
+      max-width: 600px;
     }
     &--small {
       width: 250px;

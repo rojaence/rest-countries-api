@@ -21,10 +21,15 @@ body {
 .main {
   width: 100%;
   box-sizing: border-box;
-  @media screen and (min-width: 768px) {
-    margin: 0 auto;
-    max-width: 1400px;
-  }
+}
+
+.bar-wrapper {
+  position: sticky;
+  top: 55px;
+  z-index: 95;
+  background-color: var(--main-bg-color-80);
+  backdrop-filter: blur(50px);
+  transition: var(--fade-transition);
 }
 
 .app-footer {

@@ -1,7 +1,7 @@
 <template>
   <article class="card" :class="[dense ? 'elevation-2 card--animation' : 'card--expand']">
     <header class="card__header">
-      <img :src="data.flags.png" alt="Country flag" class="card__flag">
+      <img :src="dense ? data.flags.png : data.flags.svg" alt="Country flag" class="card__flag">
     </header>
     <div class="card__body">
       <h2 class="card__title">{{ data.name.common }}</h2>
@@ -16,7 +16,7 @@
       </ul>
       <ul class="card__list card__list--extra-data" v-if="!dense">
         <li class="card__item" v-for="item in extraData" :key="item.label">
-          <span class="card__label">{{ item.label }}</span>
+          <span class="card__label">{{ item.label }}:</span>
           <span class="card__value" v-if="item.label === 'Top Level Domain'">{{ item.value[0] || '' }}</span>
           <span class="card__value" v-if="item.label === 'Currencies'">
             {{ formatCurrencyValues(item.value) }}
@@ -121,6 +121,9 @@ const formatBorderValues = (borders) => {
   transition: var(--fade-transition);
   &__title {
     font-size: var(--h2-size);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__flag {
     width: 100%;
@@ -180,9 +183,13 @@ const formatBorderValues = (borders) => {
 
 .card--expand {
   height: auto;
+  max-width: 100%;
   border-radius: 0;
   user-select: auto;
   background-color: transparent;
+  .card__title {
+    white-space: normal;
+  }
   .card {
     &__flag {
       height: auto;
@@ -246,7 +253,7 @@ const formatBorderValues = (borders) => {
 
 @media screen and (min-width: 1440px) {
   .card {
-    column-gap: 10rem;
+    column-gap: 8rem;
   }
   .card__title {
     font-size: 1.6rem;

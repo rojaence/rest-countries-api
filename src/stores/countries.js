@@ -21,8 +21,9 @@ export const useCountriesStore = defineStore({
     async getCountries() {
       this.countries = [];
       this.loadingData = true;
+      this.errorConnection = false;
       try {
-        const request = await fetch('https://restcountries.com/v3.1/all',);
+        const request = await fetch('https://restcountries.com/v3.1/all');
         const response = await request.json();
         let regions = [], codes = [], countries = [];
         response.forEach(country => {
@@ -47,7 +48,11 @@ export const useCountriesStore = defineStore({
           }
           countries.push(country);
         });
-        this.countries = countries;
+        this.countries = countries.sort((a, b) => {
+          if(a.name.common < b.name.common) return -1;
+          if(a.name.common > b.name.common) return 1;
+          return 0;
+        });
       } catch(error) {
         this.errorConnection = true;
       } finally {
