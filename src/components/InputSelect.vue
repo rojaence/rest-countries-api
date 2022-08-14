@@ -2,7 +2,7 @@
   <div tabindex="0" class="field field--small field-select elevation-2" @focusout="toggleList(false)">
     <span id="search-region" class="field__input" v-text="selectedItem" @click="toggleList(!open)"></span>
     <label class="field__label" @click="toggleList(!open)">
-      <icon-chevron :class="{ 'rotate-transition' : true, 'rotate-transition--active' : open}"></icon-chevron>
+      <icon name="chevron" :class="{ 'rotate-transition' : true, 'rotate-transition--active' : open}"></icon>
     </label>
     <ul class="field-select__list elevation-2" :class="{ 'field-select__list--active': open }">
       <li class="field-select__item" :class="{ 'field-select__item--selected': item === selectedItem }" v-for="(item, index) in items" :key="index" @click="selectRegion(item)">
@@ -15,7 +15,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import IconChevron from '@/components/icons/IconChevron.vue'
 
 const props = defineProps({
   items: {

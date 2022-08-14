@@ -3,7 +3,7 @@
     <div class="bar-wrapper">
       <div class="header-options">
         <router-link class="button button--small button--link elevation-2" :to="{ name: 'World' }">
-          <icon-arrow></icon-arrow>
+          <icon name="arrow"></icon>
           <span>Back</span>
         </router-link>
       </div>
@@ -19,7 +19,6 @@ import { RouterLink, useRoute } from 'vue-router'
 import { computed, watch, ref } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import CountryCard from '@/components/CountryCard.vue'
-import IconArrow from '@/components/icons/IconArrow.vue'
 
 const props = defineProps({
   cca3: {

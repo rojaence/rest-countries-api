@@ -4,16 +4,16 @@
       <div class="filter-options">
         <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="250" @change-value="setNameValue">
           <template #icon>
-            <icon-search></icon-search>
+            <icon name="search"></icon>
           </template>
         </input-text>
         <input-select 
           class="filter-options__select" @change-value="setRegionValue" :selected-value="regionItems[0]" :items="regionItems" ref="regionSelectInput"></input-select>
-        <icon-refresh class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems">Obtener regiones</icon-refresh>
+        <icon name="refresh" class="button button--icon filter-options__refresh elevation-3" @click="getCountriesItems"></icon>
         <div class="control">
           <div class="control__actions">
-            <icon-chevron class="button button--icon transparent icon--left" @click="prevPage()"></icon-chevron>
-            <icon-chevron class="button button--icon transparent icon--right" @click="nextPage()"></icon-chevron>
+            <icon name="chevron" class="button button--icon transparent icon--left" :class="{ 'button--disabled': initialIndex === 0 }" @click="prevPage()"></icon>
+            <icon name="chevron" class="button button--icon transparent icon--right" :class="{ 'button--disabled': finalIndex >= filteredCountries.length }" @click="nextPage()"></icon>
           </div>
           <span class="control__pagination">{{ pagination }}</span>
         </div>
@@ -26,7 +26,7 @@
           </li>
         </transition-group>
       <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData && !countriesStore.errorConnection" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
-        <icon-alert class="no-data__icon"></icon-alert>
+        <icon name="alert" class="no-data__icon"></icon>
         <span class="no-data__text">No data found for "{{ filteredName }}"</span>
       </div>
       <spinner v-if="countriesStore.loadingData"></spinner>
@@ -37,20 +37,16 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import InputSelect from '@/components/InputSelect.vue'
 import InputText from '@/components/InputText.vue'
-import IconSearch from '@/components/icons/IconSearch.vue'
-import IconAlert from '@/components/icons/IconAlert.vue'
-import IconChevron from '@/components/icons/IconChevron.vue'
-import IconRefresh from '@/components/icons/IconRefresh.vue'
 import Spinner from '@/components/Spinner.vue'
 import CountryCard from '@/components/CountryCard.vue'
 import ErrorConnection from '@/components/ErrorConnection.vue'
 
 const initialIndex = ref(0);
-const maxPageItems = ref(28);
+const maxPageItems = 32;
 const finalIndex = ref(0);
 
 const countriesStore = useCountriesStore();
@@ -109,13 +105,19 @@ const filteredCountries = computed(() => {
   if (!countryName && !region || !countryName && region === 'all') {
     return data;
   } else if (countryName && !region) {
-    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()))
   } else if (!countryName && region) {
-    return data.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+    return data.filter(c => c.region.toLowerCase().trim().includes(region.toLowerCase().trim()))
   } else if (countryName && region === 'all') {
-    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()));
+    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim())
+    || ((c.capital && c.capital[0].toLowerCase().trim().includes(countryName.toLowerCase().trim()))));
   } else {
-    return data.filter(c => c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()));
+    return data.filter(c => (
+    c.name.common.toLowerCase().trim().includes(countryName.toLowerCase().trim()) 
+    && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()))
+    || 
+    ((c.capital && c.capital[0].toLowerCase().trim().includes(countryName.toLowerCase().trim())))
+    && c.region.toLowerCase().trim().includes(region.toLowerCase().trim()))
   }
 });
 
@@ -123,26 +125,26 @@ const pagination = computed(() => {
   let dataLength = filteredCountries.value.length;
   if (dataLength > 0) {
     if (initialIndex.value === 0) {
-      finalIndex.value = dataLength < maxPageItems.value ? dataLength : maxPageItems.value;
+      finalIndex.value = dataLength < maxPageItems ? dataLength : maxPageItems;
     }
     if (finalIndex.value > dataLength) return `${initialIndex.value + 1} - ${dataLength} of ${dataLength}`;
     return `${initialIndex.value + 1} - ${finalIndex.value} of ${dataLength}`;
   }
-  else return '0 - 0 of 0';
+  else return `-`;
 });
 
 const prevPage = () => {
   if (initialIndex.value === 0 || filteredCountries.value.length === 0) return;
-  initialIndex.value -= maxPageItems.value;
-  finalIndex.value -= maxPageItems.value;
+  initialIndex.value -= maxPageItems;
+  finalIndex.value -= maxPageItems;
 }
 
 const nextPage = () => {
   let dataLength = filteredCountries.value.length;
   if (dataLength === 0 || finalIndex.value === dataLength) return;
-  if (initialIndex.value + maxPageItems.value < dataLength) {
-    initialIndex.value += maxPageItems.value;
-    finalIndex.value += maxPageItems.value;
+  if (initialIndex.value + maxPageItems < dataLength) {
+    initialIndex.value += maxPageItems;
+    finalIndex.value += maxPageItems;
   }
 }
 
@@ -154,9 +156,6 @@ const resetPagination = () => {
 onBeforeMount(() => {
   if (!countriesStore.hasCountries) getCountriesItems();
 })
-
-onMounted(() => {
-});
 </script>
 
 <style lang="scss">
@@ -222,6 +221,7 @@ onMounted(() => {
     gap: 3rem;
     transition: opacity .1s ease-out;
     opacity: 1;
+    max-width: 100%;
     @media screen and (min-width: 768px) {
       width: 100%;
     }

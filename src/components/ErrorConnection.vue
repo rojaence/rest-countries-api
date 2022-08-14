@@ -1,7 +1,7 @@
 <template>
   <div class="error-connection">
     <div class="error-connection__content">
-      <icon-close-outline class="error-connection__icon"></icon-close-outline>
+      <icon name="alert" color="error" size="200"></icon>
       <div class="error-connection__text">
         <p>Network Error!</p>
         <p>Please try again later</p>
@@ -9,10 +9,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import IconCloseOutline from '@/components/icons/IconCloseOutline.vue'
-</script>
 
 <style lang="scss" scoped>
 .error-connection {
@@ -22,11 +18,6 @@ import IconCloseOutline from '@/components/icons/IconCloseOutline.vue'
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
-  &__icon {
-    fill: var(--error-color);
-    width: 200px;
-    height: 200px;
   }
   &__text {
     text-align: center;

@@ -4,13 +4,12 @@
       <slot name="icon"></slot>
     </label>
     <input type="text" :placeholder="hint" :maxlength="limit" class="field__input" id="search-input" autocomplete="off" @input="onInput" v-model="text">
-    <icon-close class="icon-close" v-if="clearable && text != ''" @click="clearText"></icon-close>
+    <icon name="close" class="icon-close" v-if="clearable && text != ''" @click="clearText"></icon>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import IconClose from '@/components/icons/IconClose.vue'
 
 const props = defineProps({
   hint: {

@@ -2,7 +2,7 @@
   <header class="app-header">
       <h1 class="app-header__title">Where in the world?</h1>
       <button class="button transparent rounded" @click="setAppTheme()">
-        <icon-theme :class="{ 'icon--outlined': !indexStore.darkMode }"></icon-theme>
+        <icon name="theme" :outline="!indexStore.darkMode"></icon>
         <span class="button__text">Dark Mode</span>
       </button>
   </header>
@@ -10,7 +10,6 @@
 
 <script setup>
 import { useIndexStore } from '@/stores/index'
-import IconTheme from '@/components/icons/IconTheme.vue'
 import ThemeProvider from '@/services/ThemeProvider'
 
 const indexStore = useIndexStore();
