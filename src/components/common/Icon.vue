@@ -21,7 +21,6 @@ import IconTheme from '@/components/icons/IconTheme.vue'
 import IconArrow from '@/components/icons/IconArrow.vue'
 import IconClose from '@/components/icons/IconClose.vue'
 
-// Crear un objeto que englobe todos los componentes que se usarán en el componente
 const icons = {
   search: IconSearch,
   alert: IconAlert,
