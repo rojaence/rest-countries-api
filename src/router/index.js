@@ -20,7 +20,7 @@ const router = createRouter({
       redirect: '/'
     },
     {
-      path: 'home',
+      path: '/home',
       redirect: '/'
     }
   ]
