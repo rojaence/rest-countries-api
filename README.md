@@ -57,7 +57,7 @@ Detail view - dark mode
 ### Links
 
 - Live Site URL: [REST Countries API live site](https://rojaence.github.io/rest-countries-api/)
-- Solution URL: [FrontendMentor Solution](#)
+- Solution URL: [FrontendMentor Solution](https://www.frontendmentor.io/solutions/rest-countries-api-built-with-vue-3-vue-router-pinia-and-scss-p1aUds22ZJ)
 
 ## My process
 
