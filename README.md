@@ -56,7 +56,7 @@ Detail view - dark mode
 
 ### Links
 
-- Live Site URL: [REST Countries API live site](https://github.io/rojaence/rest-countries-api/)
+- Live Site URL: [REST Countries API live site](https://rojaence.github.io/rest-countries-api/)
 - Solution URL: [FrontendMentor Solution](#)
 
 ## My process
