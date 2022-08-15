@@ -30,7 +30,7 @@
       </ul>
     </div>
     <footer class="card__footer" v-if="!dense">
-      <div class="card__item card__item--column" v-if="data.borders">
+      <div class="card__item card__|item--column" v-if="data.borders">
         <span class="card__label">Border Countries:</span>
         <div class="card__value card__value--group">
           <router-link 
