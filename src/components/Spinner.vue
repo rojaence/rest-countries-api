@@ -9,6 +9,7 @@
   position: relative;
   width: 150px;
   height: 150px;
+  filter: var(--accent-brightness-filter);
   background-image: radial-gradient(circle at center, var(--accent-color) 40%, transparent 50%);
   border-radius: 50%;
   &:after, &:before {

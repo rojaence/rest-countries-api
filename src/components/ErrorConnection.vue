@@ -1,7 +1,7 @@
 <template>
   <div class="error-connection">
     <div class="error-connection__content">
-      <icon name="alert" color="error" size="200"></icon>
+      <icon name="alert" color="error" :size="200"></icon>
       <div class="error-connection__text">
         <p>Network Error!</p>
         <p>Please try again later</p>

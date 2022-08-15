@@ -8,15 +8,15 @@
         </router-link>
       </div>
     </div>
-    <div class="container country-data" ref="detailsContainer">
-        <country-card :data="countryData" :dense="false"></country-card>
+    <div class="container country-data" ref="detailsContainer">     
+        <country-card :key="countryData.cca3" :data="countryData" :dense="false"></country-card>
     </div>
   </section>
 </template>
 
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
-import { computed, watch, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCountriesStore } from '@/stores/countries'
 import CountryCard from '@/components/CountryCard.vue'
 
@@ -53,9 +53,8 @@ watch(() => props.cca3, (value) => {
 
 <style lang="scss" scoped>
 .details-view {
-  padding: 1rem 0;
+  padding-top: 1rem;
 }
-
 .country-data, .header-options {
   max-width: 1440px;
   margin: 0 auto;
@@ -63,6 +62,7 @@ watch(() => props.cca3, (value) => {
 
 .country-data {
   padding-top: 3rem;
+  box-sizing: border-box;
 }
 
 .header-options {

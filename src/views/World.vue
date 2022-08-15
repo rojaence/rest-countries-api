@@ -1,5 +1,5 @@
 <template>
-  <section class="container world-view">
+  <section class="world-view">
     <div class="bar-wrapper">
       <div class="filter-options">
         <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="250" @change-value="setNameValue">
@@ -20,14 +20,14 @@
       </div>
     </div>
     <div class="countries-gallery">
-        <transition-group class="countries-gallery__list" ref="countriesList" tag="ul" name="list-transition">
-          <li class="countries-gallery__item" v-for="(item, index) in filteredCountries.slice(initialIndex, finalIndex)" :key="index">      
-            <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
-          </li>
-        </transition-group>
+      <transition-group class="countries-gallery__list" ref="countriesList" tag="ul" name="list-transition">
+        <li class="countries-gallery__item" v-for="(item, index) in filteredCountries.slice(initialIndex, finalIndex)" :key="index">      
+          <country-card @click="showItemDetails(item)" :data="item" :dense="true"></country-card>
+        </li>
+      </transition-group>
       <div class="no-data" v-if="filteredCountries.length === 0 && !countriesStore.loadingData && !countriesStore.errorConnection" :class="{ 'no-data--show' : filteredCountries.length === 0 }">
-        <icon name="alert" class="no-data__icon"></icon>
-        <span class="no-data__text">No data found for "{{ filteredName }}"</span>
+        <icon name="alert" class="no-data__icon" :size="128"></icon>
+        <span class="no-data__text">No results for "{{ filteredName }}"</span>
       </div>
       <spinner v-if="countriesStore.loadingData"></spinner>
       <error-connection v-if="countriesStore.errorConnection"></error-connection>
@@ -160,7 +160,7 @@ onBeforeMount(() => {
 
 <style lang="scss">
 .world-view {
-  padding: 1rem 0;
+  padding-top: 1rem;
 }
 
 .filter-options {
@@ -216,6 +216,7 @@ onBeforeMount(() => {
     box-sizing: border-box;
     list-style: none;
     display: grid;
+    margin: 0;
     grid-template-columns: repeat(auto-fill, minmax(300px, 320px));
     justify-content: center;
     gap: 3rem;
@@ -245,8 +246,6 @@ onBeforeMount(() => {
   padding: 1rem;
   &__icon {
     opacity: 0.5;
-    width: 128px;
-    height: 128px;
   }
   &__text {
     display: grid;

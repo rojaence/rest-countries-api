@@ -1,7 +1,9 @@
 <template>
   <article class="card" :class="[dense ? 'elevation-2 card--animation' : 'card--expand']">
     <header class="card__header">
-      <img :src="dense ? data.flags.png : data.flags.svg" alt="Country flag" class="card__flag">
+      <transition :name="!dense ? 'fade-transition' : ''" mode="out-in">
+        <img :key="data.cca3" :src="dense ? data.flags.png : data.flags.svg" alt="Country flag" class="card__flag">
+      </transition>
     </header>
     <div class="card__body">
       <h2 class="card__title">{{ data.name.common }}</h2>
@@ -63,15 +65,16 @@ const basicData = computed(() => {
   if (props.dense) {
     return [
       { label: 'Population', value: props.data.population || '' },
+      { label: 'Region', value: props.data.region || ''},
       { label: 'Capital', value: props.data.capital || '' },
-      { label: 'Region', value: props.data.region || ''}
     ].filter(item => item.value);
   } else {
     return [
       { label: 'Native Name', value: props.data.name.nativeName || ''},
       { label: 'Population', value: props.data.population || ''},
-      { label: 'Capital', value: props.data.capital || ''},
       { label: 'Region', value: props.data.region || ''},
+      { label: 'Sub Region', value: props.data.subregion || '' },
+      { label: 'Capital', value: props.data.capital || ''},
     ].filter(item => item.value);
   }
 })
@@ -139,7 +142,7 @@ const formatBorderValues = (borders) => {
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: .8rem;
     &--basic-data {
       margin-top: 1.5rem;
     }

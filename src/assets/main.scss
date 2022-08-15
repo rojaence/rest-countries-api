@@ -25,11 +25,12 @@ body {
 
 .bar-wrapper {
   position: sticky;
-  top: 55px;
-  z-index: 95;
+  top: 50px;
+  z-index: 90;
   background-color: var(--main-bg-color-80);
   backdrop-filter: blur(50px);
   transition: var(--fade-transition);
+  padding-top: .5rem;
 }
 
 .app-footer {

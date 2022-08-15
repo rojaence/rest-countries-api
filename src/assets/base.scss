@@ -48,9 +48,11 @@
   --btn-hover-color: var(--gray);
   --active-color: var(--accent-light-blue);
   --accent-color: var(--accent-light-blue-alt);
+  --accent-color-alt: var(--accent-dark-blue-alt); 
   --scrollbar-bg: #E0E0E0;
   --brightness-filter: brightness(0.98);
-  --error-color: var(--error-color-light); 
+  --error-color: var(--error-color-light);
+  --accent-brightness-filter: brightness(0.85); 
   &--dark {
     --main-bg-color: var(--very-dark-blue-1);
     --main-bg-color-80: var(--very-dark-blue-1-80);
@@ -60,9 +62,11 @@
     --btn-hover-color: var(--very-dark-blue-3);
     --active-color: var(--accent-dark-blue);
     --accent-color: var(--accent-dark-blue-alt);
+    --accent-color-alt: var(--accent-light-blue-alt); 
     --scrollbar-bg: #263340;
     --brightness-filter: brightness(1.03);
     --error-color: var(--error-color-dark);
+    --accent-brightness-filter: brightness(1.15); 
   }
 }
 
