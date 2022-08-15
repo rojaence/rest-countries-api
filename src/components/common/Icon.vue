@@ -1,7 +1,6 @@
 <template>
   <component
     :is="iconComponent"
-    role="img"
     class="icon"
     :class="{ 'icon--outline': outline, 'icon--error': color === 'error' }"
     :height="size"

@@ -1,5 +1,5 @@
 <template>
-  <section class="world-view">
+  <div class="world-view">
     <div class="bar-wrapper">
       <div class="filter-options">
         <input-text class="filter-options__search" :clearable="true" :hint="'Search for a country...'" :limit="250" @change-value="setNameValue">
@@ -32,7 +32,7 @@
       <spinner v-if="countriesStore.loadingData"></spinner>
       <error-connection v-if="countriesStore.errorConnection"></error-connection>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
