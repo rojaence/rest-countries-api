@@ -15,10 +15,14 @@ const router = createRouter({
       props: true,
       component: () => import('../views/CountryDetail.vue')
     },
-    /* {
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
-    } */
+    },
+    {
+      path: 'home',
+      redirect: '/'
+    }
   ]
 })
 
